@@ -1,5 +1,5 @@
 # 🚀 LeetCode Daily Solutions
-
+Profile: https://leetcode.com/u/FadyRafat/
 A repository dedicated to tracking my progress on LeetCode. I solve problems daily to sharpen my understanding of data structures and algorithms.
 
 ## 📊 Stats
