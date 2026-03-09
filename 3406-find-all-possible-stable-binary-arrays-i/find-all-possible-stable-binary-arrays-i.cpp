@@ -1,67 +1,35 @@
 class Solution {
 int const mod = 1e9 + 7;
-int const static N = 201;
-int dp[N][N][N][2], limit;
+int add(long long a, int b) {
+    return (a + b + mod) % mod;
+}
 public:
-    int rec(int o, int z, int cnt, bool lst) {
-        if (cnt < 0) return 0;
-        if (!o && !z) return 1;
-        int &ret = dp[o][z][cnt][lst];
-        if (~ret) return ret;
-
-        ret = 0;
-
-        if (o) {
-            ret = (ret + rec(o - 1, z, (lst == 1 ? cnt - 1 : limit - 1), 1)) % mod;
-        }
-        if (z) {
-            ret = (ret + rec(o, z - 1, (lst == 0 ? cnt - 1 : limit - 1), 0)) % mod;
-        }
-        return ret;
-    }
-    // one , zero , cnt , 2
     int numberOfStableArrays(int zero, int one, int limit) {
-        // any continous zeros of limit or one
-        // memset(dp, -1, sizeof dp);
+        vector<vector<vector<int>>> dp(zero + 1, vector<vector<int>>(one + 1, vector<int>(2, 0)));
+        for (int i = 1; i <= min(zero, limit); ++i) dp[i][0][0] = 1;
+        for (int j = 1; j <= min(one, limit); ++j) dp[0][j][1] = 1;
 
-        dp[0][1][1][0] = 1; 
-        dp[1][0][1][1] = 1;        
-        // for (int i = 0; i <= limit; ++i) {
-        //     for (int j = 0; j < 2; ++j) {
-        //         dp[0][0][i][j] = 1;
-        //     }
-        // }
+        for (int o = 1; o <= one; ++o) {
+            for (int z = 1; z <= zero; ++z) {
+                {
+                    int &ret = dp[z][o][0];
+                    ret = add(dp[z - 1][o][0], dp[z - 1][o][1]) % mod;
+                    if (z > limit) {
+                        ret = add(ret, -dp[z - limit - 1][o][1]);
+                    }
+                }
 
-        for (int o = 0; o <= one; ++o) {
-            for (int z = 0; z <= zero; ++z) {
-                for (int cnt = 0; cnt <= limit; ++cnt) {
-                    for (int lst = 0; lst < 2; ++lst) {
-                        int &ret = dp[o][z][cnt][lst];
-                        int cur = (lst == 0 ? cnt + 1 : 1);
-                        if (z < zero && cur <= limit) {
-                            dp[o][z + 1][cur][0] += ret;
-                            if (dp[o][z + 1][cur][0] >= mod)
-                                dp[o][z + 1][cur][0] -= mod;
-                        }
-                        
-                        cur = (lst == 1 ? cnt + 1 : 1);
-                        if (o < one && cur <= limit) {
-                            dp[o + 1][z][cur][1] += ret;
-                            if (dp[o + 1][z][cur][1] >= mod)
-                                dp[o + 1][z][cur][1] -= mod;
-                        }
+                {
+                    int &ret = dp[z][o][1];
+                    ret = add(dp[z][o - 1][0], dp[z][o - 1][1]);
+                    if (o > limit) {
+                        ret = add(ret, -dp[z][o - limit - 1][0]);
                     }
                 }
             }
         }
 
-        int ans = 0;
-        for (int cnt = 0; cnt <= limit; ++cnt) {
-            for (int lst = 0; lst < 2; ++lst) {
-                ans = (ans + dp[one][zero][cnt][lst]) % mod;
-            }
-        }
-        
+        int ans = add(dp[zero][one][0], dp[zero][one][1]);
         return ans;
     }
 };
