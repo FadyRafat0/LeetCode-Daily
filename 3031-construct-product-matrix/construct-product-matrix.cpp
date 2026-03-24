@@ -23,9 +23,9 @@ public:
         }
 
         vector<vector<int>> ans(n, vector<int>(m));
+        vector<int> cur_prf(m + 2, 1), cur_suf(m + 2, 1);
         for (int i = 1; i <= n; ++i) {
             int cur = mul(prf[i - 1], suf[i + 1]);
-            vector<int> cur_prf(m + 2, 1), cur_suf(m + 2, 1);
             for (int j = 1; j <= m; ++j) {
                 cur_prf[j] = mul(cur_prf[j - 1], grid[i - 1][j - 1]);
             }
