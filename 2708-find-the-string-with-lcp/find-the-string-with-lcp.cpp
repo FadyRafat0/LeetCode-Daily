@@ -37,13 +37,13 @@ public:
         }
 
         dp = vector<vector<int>>(n, vector<int>(n, -1));
-        vector<vector<int>> my_lcp(n, vector<int>(n));
         for (int i = 0; i < n; ++i) {
             for (int j = 0; j < n; ++j) {
-                my_lcp[i][j] = rec(i, j, s);
+                int real = rec(i, j, s);
+                if (real != lcp[i][j]) return "";
             }
         }
 
-        return (lcp == my_lcp ? s : "");
+        return s;
     }
 };
