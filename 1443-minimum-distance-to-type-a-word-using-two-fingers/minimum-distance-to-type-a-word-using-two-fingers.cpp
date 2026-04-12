@@ -23,9 +23,7 @@ public:
         memset(dp, -1, sizeof dp);
         int ans = 1e9;
         for (int a = 0; a < 26; ++a) {
-            for (int b = 0; b < 26; ++b) {
-                ans = min(ans, rec(0, a, b));
-            }
+            ans = min(ans, rec(0, s[0] - 'A', a));
         }
         return ans;
     }
